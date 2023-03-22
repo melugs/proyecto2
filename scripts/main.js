@@ -4,52 +4,61 @@ const listaEventos = data.events
 
 let tarjetasCreadas = crearTarjetas(listaEventos)
 
-let checkbox = document.getElementById('inlineCheckbox1')
+let checkboxes = document.querySelectorAll('.form-check-input')
+console.log(checkboxes);
+
+//let checkbox = document.getElementById("inlineCheckbox1")
 
 let formulario = document.getElementById('form')
 
 let input = document.getElementById('input')
 
-
-
-
 eventos.innerHTML = tarjetasCreadas
+
 
 function crearTarjetas(datos) {
   eventos.innerHTML = ""
   let tarjetas = ''
-  for (const evento of data.events) {
+  datos.forEach(evento => {
     tarjetas += `<div class="card position-relative" style="width: 12rem;">
     <img src=${evento.image} class="card-img-top" alt="img">
     <div class="card-body">
       <h5 class="card-title">${evento.name}</h5><p class="card-text">${evento.description}.</p>
-      <a href="./details.html" class="btn btn-outline-dark position-absolute bottom-0 end-0">Details</a>
+      <a href="./details.html?id=${evento._id}" class="btn btn-outline-dark position-absolute bottom-0 end-0">Details</a>
     </div>
   </div>`
-  }
+  });
   return tarjetas
 }
 
-console.log(listaEventos);
-
-
-checkbox.addEventListener('click', () => {
-  console.log(checkbox.checked);
-  if (checkbox.checked){
-    let filtrarCategorias = listaEventos.filter((event) => event.category == checkbox.value)
-
-    console.log(filtrarCategorias)
-  }else{
-    eventos.innerHTML = tarjetasCreadas
-  }
-
+checkboxes.forEach(cbox => {
+  cbox.addEventListener('click', check => {
+    console.log(check.checked);
+    if (check.checked) {
+      console.log(check.checked);
+      console.log(cbox.value);
+      let filtrarCategorias = listaEventos.filter(evento => evento.category == cbox.value)
+      eventos.innerHTML = crearTarjetas(filtrarCategorias)
+    } else {
+      eventos.innerHTML = tarjetasCreadas
+    }
+  })
 })
 
 
 
-input.addEventListener('change', () => {
-  let categoriasFiltradas = listaEventos.filter((event) => event.category.toLowerCase().includes(input.value.toLowerCase()) )
-  console.log(categoriasFiltradas)
-  let tarjetasCreadas = crearTarjetas(categoriasFiltradas)
-  eventos.innerHTML = tarjetasCreadas
+// checkbox.addEventListener('click', (evento) => {
+//   if (checkbox.checked) {
+//     let filtrarCategorias = data.events.filter(evento => evento.category == checkbox.value)
+//     eventos.innerHTML = crearTarjetas(filtrarCategorias)
+//   }else{
+//     eventos.innerHTML = crearTarjetas(listaEventos)
+//   }
+// })
+
+formulario.addEventListener('submit', (evento) => {
+  evento.preventDefault()
+  let categoriasFiltradas = listaEventos.filter((evento) => evento.category.toLowerCase().includes(input.value.toLowerCase()) )
+  eventos.innerHTML = crearTarjetas(categoriasFiltradas)
 })
+
